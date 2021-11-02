@@ -32,6 +32,22 @@ def archiv_wallet():
         print(archiv)
         return archiv
 
+
+def self_service_terminal():
+    city = input('add you city')
+    self_service_terminal_url = f'https://api.privatbank.ua/p24api/infrastructure?json&tso&address=&city={city}'
+    response = requests.get(self_service_terminal_url)
+    if response.status_code == 200:
+        terminal = response.json()
+        print(terminal)
+        return terminal
+
+
+def write_json_self_service_terminal():
+    with open('self_service_terminal.json', 'w', encoding='utf-8') as file_json:
+        json.dump(self_service_terminal(), file_json, ensure_ascii=False, indent=4)
+
+
 def write_json_archiv():
     with open('archiv.json', 'w', encoding='utf-8') as file_json:
         json.dump(archiv_wallet(), file_json, ensure_ascii=False, indent=4)
@@ -51,7 +67,9 @@ def full_info():
     2 = якщо вам потрібен безготівковий обмінний курс у privat24,
     3 = для запису json файлу,
     4 = для перегляду архіву валют,
-    5 = для створення json файлу з архівам валют 
+    5 = для створення json файлу з архівам валют,
+    6 = для пошуку термінала самообслуговування,
+    7 = для створення json файлу з розташуванням терміналів самообслуговування у вашому місті,
     Введіть команду:-"""))
     if answer == 1:
         cash_rate()
@@ -63,6 +81,10 @@ def full_info():
         archiv_wallet()
     elif answer == 5:
         write_json_archiv()
+    elif answer == 6:
+        self_service_terminal()
+    elif answer == 7:
+        write_json_self_service_terminal()
     else:
         print('CATASTROFA')
         return full_info()

@@ -21,6 +21,22 @@ def cashless_rate():
         return online_info
 
 
+def archiv_wallet():
+    day = int(input('add day'))
+    month = int(input('add month'))
+    year = int(input('add year'))
+    archiv_wallet_url = f'https://api.privatbank.ua/p24api/exchange_rates?json&date={day}.{month}.{year}'
+    response = requests.get(archiv_wallet_url)
+    if response.status_code == 200:
+        archiv = response.json()
+        print(archiv)
+        return archiv
+
+def write_json_archiv():
+    with open('archiv.json', 'w', encoding='utf-8') as file_json:
+        json.dump(archiv_wallet(), file_json, ensure_ascii=False, indent=4)
+
+
 def write_json_file():
     full_wallet_info = cash_rate(), cashless_rate()
     with open('wallet.json', 'w', encoding='utf-8') as file_json:
@@ -33,7 +49,9 @@ def full_info():
     Виберіть дію яку бажаете виконати, натисніть:
     1 = якщо вам потрібен готівковий курс у відділеннях ПриватБанку,
     2 = якщо вам потрібен безготівковий обмінний курс у privat24,
-    3 = для запису json файлу:
+    3 = для запису json файлу,
+    4 = для перегляду архіву валют,
+    5 = для створення json файлу з архівам валют 
     Введіть команду:-"""))
     if answer == 1:
         cash_rate()
@@ -41,9 +59,14 @@ def full_info():
         cashless_rate()
     elif answer == 3:
         write_json_file()
+    elif answer == 4:
+        archiv_wallet()
+    elif answer == 5:
+        write_json_archiv()
     else:
         print('CATASTROFA')
         return full_info()
 
 
 full_info()
+#Код валюты (справочник кодов валют: https://ru.wikipedia.org/wiki/Коды_валют)
